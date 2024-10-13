@@ -65,8 +65,7 @@ void main(void)
 	T2MOD |= (1 << 4);
 	TMOD = 0x01;
 	
-	USB_CTRL = 0b00101001; // Full speed
-	USB_CTRL = 0b00101001; // Low speed
+	USB_CTRL = 0b01101001; // Low speed
 	UDEV_CTRL |= (1 << 2) | (1 << 0);
 	
 	while (1) {
