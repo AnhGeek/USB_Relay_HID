@@ -14,10 +14,14 @@
 #define USB_DESCR_TYP_CS_ENDP   0x25
 #define USB_DESCR_TYP_HUB       0x29
 
-#define LOW_SPEED_DEVICE        0
-#define FULL_SPEED_DEVICE       1
-	
-#define USB_DEVICE_TYPE         LOW_SPEED_DEVICE
+
+typedef unsigned char *PUINT8;
+
+typedef struct
+{
+	uint8_t* descr;
+	uint8_t size;
+} DescriptorData;
 
 /* device descriptor */
 extern const DescriptorData DevDesc;

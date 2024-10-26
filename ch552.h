@@ -851,9 +851,6 @@ extern "C" {
 #ifndef USB_DEVICE_ADDR
 #define	USB_DEVICE_ADDR			0x02	/* 默认的USB设备地址 */
 #endif
-#ifndef DEFAULT_ENDP0_SIZE
-#define DEFAULT_ENDP0_SIZE      8       /* default maximum packet size for endpoint 0 */
-#endif
 #ifndef MAX_PACKET_SIZE
 #define MAX_PACKET_SIZE         64      /* maximum packet size */
 #endif

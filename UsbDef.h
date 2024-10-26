@@ -8,9 +8,9 @@
 
 #define MAX_PACKET_SIZE         64       /* maximum packet size */
 
-//endpoints
-#define HID_ENPOINT             0x01
-#define KEYBOARD_ENDPOINT       0x02
-#define MOUSE_ENDPOINT          0x03
+#define LOW_SPEED_DEVICE        0
+#define FULL_SPEED_DEVICE       1
+	
+#define USB_DEVICE_TYPE         FULL_SPEED_DEVICE
 
 #endif

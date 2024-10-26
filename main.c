@@ -1,5 +1,8 @@
 #include "ch552.h"
+#include "UsbDef.h"
+#include "UsbDescriptor.h"
 #include <stdint.h>
+#include <string.h>
 
 #define DATA_STATE 0
 #define STATUS_STATE 1
@@ -22,53 +25,48 @@ void delay_ms(uint16_t u16Delay)
 }
 
 SBIT(P3_1,0xB0,1);
-
+static PUINT8  pDescr;   
 __xdata uint8_t u8Buff[64];
 __xdata uint8_t u8Ep1Buff[64];
 __xdata uint8_t u8Ep2Buff[64];
 
 uint8_t u8UsbIndex;
 const uint8_t u8DeviceDescriptor[] = {
-	0x12, /* 0 */
-	0x01, /* 1 */
-	0x00, /* 2 */
-	0x02, /* 3 */
-	0x00, /* 4 */
-	0x00, /* 5 */
-	0x00, /* 6 */
-	0x40, /* 7 */
-	0x34, /* 8 */
-	0x12, /* 9 */
-	0x78, /* 10 */
-	0x56, /* 11 */
-	0x00, /* 12 */
-	0x02, /* 13 */
-	0x00, /* 14 */
-	0x00, /* 15 */
-	0x00, /* 16 */
-	0x01 /* 17 */
+	0x12,        // bLength
+	0x01,        // bDescriptorType (Device)
+	0x00, 0x02,  // bcdUSB 2.00
+	0x00,        // bDeviceClass (Use class information in the Interface Descriptors)
+	0x00,        // bDeviceSubClass 
+	0x00,        // bDeviceProtocol 
+	0x40,        // bMaxPacketSize0 64
+	0x4C, 0x05,  // idVendor 0x054C
+	0x68, 0x02,  // idProduct 0x0268
+	0x00, 0x01,  // bcdDevice 2.00
+	0x00,        // iManufacturer (String Index)
+	0x00,        // iProduct (String Index)
+	0x00,        // iSerialNumber (String Index)
+	0x01,        // bNumConfigurations 1
 };
 
 const uint8_t u8ConfigDescriptor[] = {
-	0x09,
-	0x02,
-	0x20,
-	0x00,
-	0x01,
-	0x01,
-	0x00,
-	0xC0,
-	0x32,
+	0x09,        // bLength
+	0x02,        // bDescriptorType (Configuration)
+	0x20, 0x00,  // wTotalLength 34
+	0x01,        // bNumInterfaces 1
+	0x01,        // bConfigurationValue
+	0x00,        // iConfiguration (String Index)
+	0x80,        // bmAttributes
+	0x32,        // bMaxPower 100mA
 	/* interface */
-	0x09,
-	0x04,
-	0x00,
-	0x00,
-	0x02,
-	0xFF,
-	0xFF,
-	0xFF,
-	0x00,
+	0x09,        // bLength
+	0x04,        // bDescriptorType (Interface)
+	0x00,        // bInterfaceNumber 0
+	0x00,        // bAlternateSetting
+	0x02,        // bNumEndpoints 2
+	0x03,        // bInterfaceClass
+	0x00,        // bInterfaceSubClass
+	0x00,        // bInterfaceProtocol
+	0x00,        // iInterface (String Index)
 	/* endpoint out */
 	0x07,
 	0x05,
@@ -112,7 +110,7 @@ void send(uint8_t u8Data)
 void main(void)
 {
 	uint8_t i;
-	uint8_t tmp;
+	uint8_t tmp, len = 0;
 	uint8_t u8ControlState = DATA_STATE;
 	
 	/* clock */
@@ -132,14 +130,15 @@ void main(void)
 	T2MOD |= (1 << 4);
 	TMOD = 0x01;
 	
-	if(0){
-		USB_CTRL = 0b01101001; // Low speed
-		UDEV_CTRL |= (1 << 2) | (1 << 0);
-	} else {
-		// Highspeed
-		USB_CTRL = (1 << 5) | (1 << 3) | (1 << 0);
-		UDEV_CTRL |= (1 << 0); 
-	}
+#if USB_DEVICE_TYPE == LOW_SPEED_DEVICE
+	USB_CTRL = 0b01101001; // Low speed
+	UDEV_CTRL |= (1 << 2) | (1 << 0);
+#elif USB_DEVICE_TYPE == FULL_SPEED_DEVICE
+	USB_CTRL = (1 << 5) | (1 << 3) | (1 << 0);
+	UDEV_CTRL |= (1 << 0); 
+#else
+	#error "usb device type error"
+#endif
 	u8UsbIndex = 0;
 	while (1) 
 	{
@@ -182,10 +181,9 @@ void main(void)
 											/* device descriptor */
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] >= 0x12) {
-												for (i = 0; i < 0x12; ++i) {
-													u8Buff[i] = u8DeviceDescriptor[i];
-												}
-												UEP0_T_LEN = 0x12;
+												//copy data to enp0 buffer
+												memcpy(u8Buff, DevDesc.descr, DevDesc.size);
+												UEP0_T_LEN = DevDesc.size;
 												UEP0_CTRL = 0x80 | 0x40;
 											}
 											break;

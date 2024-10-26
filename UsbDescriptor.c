@@ -20,7 +20,7 @@ static uint8_t _DevDesc[] =
 	DEFAULT_ENDP0_SIZE,   /*bMaxPacketSize*/
 	0x3b, 0x41,           /*idVendor (0x413b)*/
 	0x07, 0x21,           /*idProduct = 0x2107*/
-	0x00, 0x00,           /*bcdDevice rel. 0.00*/
+	0x00, 0x01,           /*bcdDevice 2.00*/
 	0x00,                 /*Index of string descriptor describing
                                                   manufacturer */
 	0x00,                 /*Index of string descriptor describing
