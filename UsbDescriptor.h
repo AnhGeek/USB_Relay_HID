@@ -1,0 +1,23 @@
+#define USB_DESCR_TYP_DEVICE    0x01
+#define USB_DESCR_TYP_CONFIG    0x02
+#define USB_DESCR_TYP_STRING    0x03
+#define USB_DESCR_TYP_INTERF    0x04
+#define USB_DESCR_TYP_ENDP      0x05
+#define USB_DESCR_TYP_QUALIF    0x06
+#define USB_DESCR_TYP_SPEED     0x07
+#define USB_DESCR_TYP_OTG       0x09
+#define USB_DESCR_TYP_BOS       0x0f
+#define USB_DESCR_TYP_HID       0x21
+#define USB_DESCR_TYP_REPORT    0x22
+#define USB_DESCR_TYP_PHYSIC    0x23
+#define USB_DESCR_TYP_CS_INTF   0x24
+#define USB_DESCR_TYP_CS_ENDP   0x25
+#define USB_DESCR_TYP_HUB       0x29
+
+#define LOW_SPEED_DEVICE        0
+#define FULL_SPEED_DEVICE       1
+	
+#define USB_DEVICE_TYPE         LOW_SPEED_DEVICE
+
+/* device descriptor */
+extern const DescriptorData DevDesc;
