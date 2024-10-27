@@ -109,7 +109,7 @@ void send(uint8_t u8Data)
 
 void main(void)
 {
-	uint8_t i;
+	//uint8_t i;
 	uint8_t tmp, len = 0;
 	uint8_t u8ControlState = DATA_STATE;
 	
@@ -152,7 +152,7 @@ void main(void)
 		}
 		
 		if (UIF_TRANSFER) {
-			/* Program will fall in to this handler after a transfer being successful
+			/* Program will jump in to this branch after a transfer being transmited successfully
 			   You must prepare data within the previous transaction. */
 			if ((USB_INT_ST & 0x0F) == 0x00) {
 				/* reset buffer */
@@ -161,23 +161,22 @@ void main(void)
 				switch((USB_INT_ST & 0x30)){
 					case 0x30:
 						//Setup transfer
-						//P3_1 = 1;
-						//P3_1 = 0;
+						P3_1 = 1;
+						P3_1 = 0;
 						if (u8Buff[0] & 0x80) {
 							/* Check bmRequestType = device to host */
-							
 							switch (u8Buff[1]) {
 								case 0x06:
 									/* bRequest == Get descriptor */
 									switch (u8Buff[3]) {
 										//Check descriptor types
 										case 0x01:
-											//P3_1 = 1;
-											//P3_1 = 0;
-											//P3_1 = 1;
-											//P3_1 = 0;
-											//P3_1 = 1;
-											//P3_1 = 0;
+											// P3_1 = 1;
+											// P3_1 = 0;
+											// P3_1 = 1;
+											// P3_1 = 0;
+											// P3_1 = 1;
+											// P3_1 = 0;
 											/* device descriptor */
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] >= 0x12) {
@@ -188,34 +187,46 @@ void main(void)
 											}
 											break;
 										case 0x02:
-											//P3_1 = 1;
-											//P3_1 = 0;
-											//P3_1 = 1;
-											//P3_1 = 0;
-											//P3_1 = 1;
-											//P3_1 = 0;
+											// P3_1 = 1;
+											// P3_1 = 0;
+											// P3_1 = 1;
+											// P3_1 = 0;
+											// P3_1 = 1;
+											// P3_1 = 0;
 											/* config descriptor */
 											u8ControlState = DATA_STATE;
-											if (u8Buff[6] >= 32) {
-												for (i = 0; i < 32; ++i) {
-													u8Buff[i] = u8ConfigDescriptor[i];
-												}
-												UEP0_T_LEN = 32;
+											if (u8Buff[6] >= 0x12) {
+												//copy data to enp0 buffer
+												memcpy(u8Buff, CfgDesc.descr, CfgDesc.size);
+												UEP0_T_LEN = CfgDesc.size;
 												UEP0_CTRL = 0x80 | 0x40;
-											} else {
-												tmp = u8Buff[6];
-												for (i = 0; i < tmp; ++i) {
-													u8Buff[i] = u8ConfigDescriptor[i];
-												}
-												UEP0_T_LEN = tmp;
+											}
+											else 
+											{
+												len = u8Buff[6];
+												memcpy(u8Buff, CfgDesc.descr, len);
+												UEP0_T_LEN = len;
 												UEP0_CTRL = 0x80 | 0x40;
 											}
 											break;
 										case 0x06:
 											u8ControlState = DATA_STATE;
-											UEP0_T_LEN = 0x00;
-											UEP0_CTRL = 0x80 | 0x40;
+											if (u8Buff[6] == 0x0a) {
+												//copy data to enp0 buffer
+												memcpy(u8Buff, DeviceQualifierCfg.descr, DeviceQualifierCfg.size);
+												UEP0_T_LEN = DeviceQualifierCfg.size;
+												UEP0_CTRL = 0x80 | 0x40;
+											}
 											break;
+
+										case USB_DESCR_TYP_REPORT:
+											u8ControlState = DATA_STATE;
+											//copy data to enp0 buffer
+											memcpy(u8Buff, CustRepDesc.descr, CustRepDesc.size);
+											UEP0_T_LEN = CustRepDesc.size;
+											UEP0_CTRL = 0x80 | 0x40;
+											
+											break; 
 									}
 									break;
 								default:
@@ -226,16 +237,16 @@ void main(void)
 						else 
 						{
 							/* Check bmRequestType = host to device */
-							//P3_1 = 1;
-							//P3_1 = 0;
-							//P3_1 = 1;
-							//P3_1 = 0;
-							//P3_1 = 1;
-							//P3_1 = 0;
-							//P3_1 = 1;
-							//P3_1 = 0;
-							//P3_1 = 1;
-							//P3_1 = 0;
+							P3_1 = 1;
+							P3_1 = 0;
+							P3_1 = 1;
+							P3_1 = 0;
+							P3_1 = 1;
+							P3_1 = 0;
+							P3_1 = 1;
+							P3_1 = 0;
+							P3_1 = 1;
+							P3_1 = 0;
 							switch (u8Buff[1]) {
 								case 0x05:
 									/* bRequest == SET_ADDRESS */
@@ -266,15 +277,15 @@ void main(void)
 						}
 						break;	
 					case 0x20:
-						/* EP0 in */
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
+						// /* EP0 in */
+						// //P3_1 = 1;
+						// //P3_1 = 0;
+						// //P3_1 = 1;
+						// //P3_1 = 0;
+						// //P3_1 = 1;
+						// //P3_1 = 0;
+						// //P3_1 = 1;
+						// //P3_1 = 0;
 						if (u8ControlState == DATA_STATE) {
 							u8ControlState = STATUS_STATE;
 							UEP0_CTRL = 0x80 | 0x40 | 0x02;

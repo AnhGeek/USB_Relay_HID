@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define USB_DESCR_TYP_DEVICE    0x01
 #define USB_DESCR_TYP_CONFIG    0x02
 #define USB_DESCR_TYP_STRING    0x03
@@ -25,3 +27,18 @@ typedef struct
 
 /* device descriptor */
 extern const DescriptorData DevDesc;
+
+/* configure descriptor */
+extern const DescriptorData CfgDesc;
+
+/* device qualifier descriptor */
+extern const DescriptorData DeviceQualifierCfg;
+
+/* custome HID report descriptor */
+extern const DescriptorData CustRepDesc;
+
+
+
+
+
+
