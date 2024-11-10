@@ -24,7 +24,10 @@ void delay_ms(uint16_t u16Delay)
 	}
 }
 
-SBIT(P3_1,0xB0,1);
+SBIT(P3_0, 0xB0, 0);
+SBIT(P1_5, 0x90, 5);
+SBIT(P1_6, 0x90, 6);
+
 static PUINT8  pDescr;   
 __xdata uint8_t u8Buff[64];
 __xdata uint8_t u8Ep1Buff[64];
@@ -93,14 +96,14 @@ void send(uint8_t u8Data)
 	
 	for (i = 0; i < 8; ++i) {
 		if (u8Data & 0x80) {
-			//P3_1 = 1;
+			//P3_0 = 1;
 			delay_ms(4);
-			//P3_1 = 0;
+			//P3_0 = 0;
 			delay_ms(1);
 		} else {
-			//P3_1 = 1;
+			//P3_0 = 1;
 			delay_ms(1);
-			//P3_1 = 0;
+			//P3_0 = 0;
 			delay_ms(4);
 		}
 		u8Data <<= 1;
@@ -119,12 +122,25 @@ void main(void)
 	CLOCK_CFG = 0x86;
 	SAFE_MOD = 0x00;
 	
-	/* P3.1 */
+	/* P3.0 */
 	/* Push-pull */
-	P3_MOD_OC &= ~(1 << 1);
-	P3_DIR_PU |= (1 << 1);
+	P3_MOD_OC &= ~(1 << 0);
+	P3_DIR_PU |= (1 << 0);
+
+	/* P1.5 */
+	/* Push-pull */
+	P1_MOD_OC &= ~(1 << 5);
+	P1_DIR_PU |= (1 << 5);
+	/* P1.6 */
+	/* Push-pull */
+	P1_MOD_OC &= ~(1 << 6);
+	P1_DIR_PU |= (1 << 6);
+
+	//Power led on
+	P1_5 = 0;
+
 	
-	P3 &= ~(1 << 1);
+	P3 &= ~(1 << 0);
 	
 	T2MOD |= (1 << 7);
 	T2MOD |= (1 << 4);
@@ -144,8 +160,8 @@ void main(void)
 	{
 		if (UIF_BUS_RST) 
 		{
-			//P3_1 = 1;
-			//P3_1 = 0;
+			//P3_0 = 1;
+			//P3_0 = 0;
 			UEP0_DMA = (uint16_t)u8Buff;
 			UEP0_CTRL = 0x02;
 			UIF_BUS_RST = 0;
@@ -161,8 +177,8 @@ void main(void)
 				switch((USB_INT_ST & 0x30)){
 					case 0x30:
 						//Setup transfer
-						P3_1 = 1;
-						P3_1 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
 						if (u8Buff[0] & 0x80) {
 							/* Check bmRequestType = device to host */
 							switch (u8Buff[1]) {
@@ -171,12 +187,12 @@ void main(void)
 									switch (u8Buff[3]) {
 										//Check descriptor types
 										case 0x01:
-											// P3_1 = 1;
-											// P3_1 = 0;
-											// P3_1 = 1;
-											// P3_1 = 0;
-											// P3_1 = 1;
-											// P3_1 = 0;
+											// P3_0 = 1;
+											// P3_0 = 0;
+											// P3_0 = 1;
+											// P3_0 = 0;
+											// P3_0 = 1;
+											// P3_0 = 0;
 											/* device descriptor */
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] >= 0x12) {
@@ -187,12 +203,12 @@ void main(void)
 											}
 											break;
 										case 0x02:
-											// P3_1 = 1;
-											// P3_1 = 0;
-											// P3_1 = 1;
-											// P3_1 = 0;
-											// P3_1 = 1;
-											// P3_1 = 0;
+											// P3_0 = 1;
+											// P3_0 = 0;
+											// P3_0 = 1;
+											// P3_0 = 0;
+											// P3_0 = 1;
+											// P3_0 = 0;
 											/* config descriptor */
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] >= 0x12) {
@@ -237,16 +253,16 @@ void main(void)
 						else 
 						{
 							/* Check bmRequestType = host to device */
-							P3_1 = 1;
-							P3_1 = 0;
-							P3_1 = 1;
-							P3_1 = 0;
-							P3_1 = 1;
-							P3_1 = 0;
-							P3_1 = 1;
-							P3_1 = 0;
-							P3_1 = 1;
-							P3_1 = 0;
+							/* P3_0 = 1;
+							P3_0 = 0;
+							P3_0 = 1;
+							P3_0 = 0;
+							P3_0 = 1;
+							P3_0 = 0;
+							P3_0 = 1;
+							P3_0 = 0;
+							P3_0 = 1;
+							P3_0 = 0; */
 							switch (u8Buff[1]) {
 								case 0x05:
 									/* bRequest == SET_ADDRESS */
@@ -278,14 +294,14 @@ void main(void)
 						break;	
 					case 0x20:
 						// /* EP0 in */
-						// //P3_1 = 1;
-						// //P3_1 = 0;
-						// //P3_1 = 1;
-						// //P3_1 = 0;
-						// //P3_1 = 1;
-						// //P3_1 = 0;
-						// //P3_1 = 1;
-						// //P3_1 = 0;
+						// //P3_0 = 1;
+						// //P3_0 = 0;
+						// //P3_0 = 1;
+						// //P3_0 = 0;
+						// //P3_0 = 1;
+						// //P3_0 = 0;
+						// //P3_0 = 1;
+						// //P3_0 = 0;
 						if (u8ControlState == DATA_STATE) {
 							u8ControlState = STATUS_STATE;
 							UEP0_CTRL = 0x80 | 0x40 | 0x02;
@@ -301,18 +317,18 @@ void main(void)
 						
 					case 0x00:
 						/* EP0 out */
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
-						//P3_1 = 1;
-						//P3_1 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
+						//P3_0 = 1;
+						//P3_0 = 0;
 						break;
 						
 					default:
@@ -324,18 +340,20 @@ void main(void)
 				/* ep1 */
 				if (u8Ep1Buff[0] == 1) 
 				{
-					P3_1 = 1;
+					P1_6 = 0;
+					P3_0 = 1;
 				} else if (u8Ep1Buff[0] == 2) 
 				{
-					P3_1 = 0;
+					P1_6 = 1;
+					P3_0 = 0;
 				} else if (u8Ep1Buff[0] == 3) 
 				{
-					P3_1 = 1;
-					P3_1 = 0;
-					u8Ep2Buff[0] = 0x05;
-					u8Ep2Buff[1] = 0x10;
-					u8Ep2Buff[2] = 0x19;
-					u8Ep2Buff[3] = 0x94;
+					//P3_0 = 1;
+					//P3_0 = 0;
+					u8Ep2Buff[0] = 0x01;
+					u8Ep2Buff[1] = 0xFF;
+					u8Ep2Buff[2] = 0xFF;
+					u8Ep2Buff[3] = 0xFF;
 					UEP2_T_LEN = 0x40;
 					tmp = UEP2_CTRL;
 					tmp &= ~(1 << 1);
