@@ -186,13 +186,7 @@ void main(void)
 									/* bRequest == Get descriptor */
 									switch (u8Buff[3]) {
 										//Check descriptor types
-										case 0x01:
-											// P3_0 = 1;
-											// P3_0 = 0;
-											// P3_0 = 1;
-											// P3_0 = 0;
-											// P3_0 = 1;
-											// P3_0 = 0;
+										case USB_DESCR_TYP_DEVICE:
 											/* device descriptor */
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] >= 0x12) {
@@ -202,13 +196,7 @@ void main(void)
 												UEP0_CTRL = 0x80 | 0x40;
 											}
 											break;
-										case 0x02:
-											// P3_0 = 1;
-											// P3_0 = 0;
-											// P3_0 = 1;
-											// P3_0 = 0;
-											// P3_0 = 1;
-											// P3_0 = 0;
+										case USB_DESCR_TYP_CONFIG:
 											/* config descriptor */
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] >= 0x12) {
@@ -225,7 +213,15 @@ void main(void)
 												UEP0_CTRL = 0x80 | 0x40;
 											}
 											break;
-										case 0x06:
+										case USB_DESCR_TYP_STRING:
+											u8ControlState = DATA_STATE;
+											tmp = u8Buff[2];
+											//copy data to enp0 buffer
+											memcpy(u8Buff, StringDescriptors[tmp].descr, StringDescriptors[tmp].size);
+											UEP0_T_LEN = StringDescriptors[tmp].size;
+											UEP0_CTRL = 0x80 | 0x40;
+											break;
+										case USB_DESCR_TYP_QUALIF:
 											u8ControlState = DATA_STATE;
 											if (u8Buff[6] == 0x0a) {
 												//copy data to enp0 buffer
@@ -234,14 +230,12 @@ void main(void)
 												UEP0_CTRL = 0x80 | 0x40;
 											}
 											break;
-
 										case USB_DESCR_TYP_REPORT:
 											u8ControlState = DATA_STATE;
 											//copy data to enp0 buffer
 											memcpy(u8Buff, CustRepDesc.descr, CustRepDesc.size);
 											UEP0_T_LEN = CustRepDesc.size;
 											UEP0_CTRL = 0x80 | 0x40;
-											
 											break; 
 									}
 									break;
@@ -253,16 +247,6 @@ void main(void)
 						else 
 						{
 							/* Check bmRequestType = host to device */
-							/* P3_0 = 1;
-							P3_0 = 0;
-							P3_0 = 1;
-							P3_0 = 0;
-							P3_0 = 1;
-							P3_0 = 0;
-							P3_0 = 1;
-							P3_0 = 0;
-							P3_0 = 1;
-							P3_0 = 0; */
 							switch (u8Buff[1]) {
 								case 0x05:
 									/* bRequest == SET_ADDRESS */
@@ -293,15 +277,7 @@ void main(void)
 						}
 						break;	
 					case 0x20:
-						// /* EP0 in */
-						// //P3_0 = 1;
-						// //P3_0 = 0;
-						// //P3_0 = 1;
-						// //P3_0 = 0;
-						// //P3_0 = 1;
-						// //P3_0 = 0;
-						// //P3_0 = 1;
-						// //P3_0 = 0;
+						/* EP0 in */
 						if (u8ControlState == DATA_STATE) {
 							u8ControlState = STATUS_STATE;
 							UEP0_CTRL = 0x80 | 0x40 | 0x02;
@@ -317,18 +293,6 @@ void main(void)
 						
 					case 0x00:
 						/* EP0 out */
-						//P3_0 = 1;
-						//P3_0 = 0;
-						//P3_0 = 1;
-						//P3_0 = 0;
-						//P3_0 = 1;
-						//P3_0 = 0;
-						//P3_0 = 1;
-						//P3_0 = 0;
-						//P3_0 = 1;
-						//P3_0 = 0;
-						//P3_0 = 1;
-						//P3_0 = 0;
 						break;
 						
 					default:
@@ -348,8 +312,6 @@ void main(void)
 					P3_0 = 0;
 				} else if (u8Ep1Buff[0] == 3) 
 				{
-					//P3_0 = 1;
-					//P3_0 = 0;
 					u8Ep2Buff[0] = 0x01;
 					u8Ep2Buff[1] = 0xFF;
 					u8Ep2Buff[2] = 0xFF;

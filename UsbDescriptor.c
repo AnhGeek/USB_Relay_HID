@@ -1,8 +1,9 @@
+#include "Type.h"
 #include "UsbDef.h"
 #include "UsbDescriptor.h"
 
 /* device descriptor */
-static uint8_t _DevDesc[] = 
+static UINT8C _DevDesc[] = 
 {
 	0x12,                 /*bLength */
 	USB_DESCR_TYP_DEVICE, /*bDescriptorType*/
@@ -20,11 +21,11 @@ static uint8_t _DevDesc[] =
 	0x3b, 0x41,           /*idVendor (0x413b)*/
 	0x07, 0x21,           /*idProduct = 0x2107*/
 	0x00, 0x01,           /*bcdDevice 2.00*/
-	0x00,                 /*Index of string descriptor describing
+	0x01,                 /*Index of string descriptor describing
                                                   manufacturer */
-	0x00,                 /*Index of string descriptor describing
+	0x02,                 /*Index of string descriptor describing
                                                  product*/
-    0x00,                 /*Index of string descriptor describing the
+    0x03,                 /*Index of string descriptor describing the
                                                  device serial number */
     0x01                  /*bNumConfigurations*/
 };
@@ -38,7 +39,7 @@ const DescriptorData DevDesc =
 };
 
 /* report descriptor */
-static uint8_t _CustRepDesc[] =
+static UINT8C _CustRepDesc[] =
 {
     0x06, 0x00, 0xFF,       // Usage Page (Vendor Defined 0xFF00)
     0x09, 0x01,             // Usage (Vendor Usage 1)
@@ -75,7 +76,7 @@ const DescriptorData CustRepDesc =
 #define TOTAL_CONFIG_DESCR_SIZE     9+9+9+7
 
 /* configuration descriptor */
-static uint8_t _CfgDesc[] =
+static UINT8C _CfgDesc[] =
 {
     0x09,                 /* bLength: Configuation Descriptor size */
     USB_DESCR_TYP_CONFIG, /* bDescriptorType: Configuration */
@@ -125,7 +126,7 @@ const DescriptorData CfgDesc =
 };
 
 /* USB Device Qualifier */
-static uint8_t _USB_DeviceQualifier[] = 
+static UINT8C _USB_DeviceQualifier[] = 
 {
   	10,             	/* bLength */
   	USB_DESCR_TYP_QUALIF,	/* bDescriptorType */
@@ -148,6 +149,78 @@ const DescriptorData DeviceQualifierCfg =
 
     sizeof(_USB_DeviceQualifier)
 };
+
+#define STRING_LANGID_SIZE          4
+#define STRING_VENDOR_SIZE          16
+#define STRING_PRODUCT_SIZE         26
+#define STRING_SERIAL_SIZE          16
+
+
+static UINT8C StringLangID[STRING_LANGID_SIZE] = 
+{
+	STRING_LANGID_SIZE,
+	USB_DESCR_TYP_STRING,
+	0x09, 0x04
+};
+
+static UINT8C StringVecdor[STRING_VENDOR_SIZE] = 
+{
+	STRING_VENDOR_SIZE,
+	USB_DESCR_TYP_STRING,
+
+	/* vendor */
+	'A', 0,
+	'N', 0,
+	'B', 0,
+	'T', 0,
+	'e', 0,
+    'c', 0,
+    'h', 0
+};
+
+static UINT8C StringProduct[STRING_PRODUCT_SIZE] = 
+{
+	STRING_PRODUCT_SIZE,
+	USB_DESCR_TYP_STRING,
+
+	/* product */
+	'U', 0,
+	'S', 0,
+	'B', 0,
+	' ', 0,
+	'R', 0,
+	'e', 0,
+	'l', 0,
+	'a', 0,
+	'y', 0,
+	'H', 0,
+    'I', 0,
+    'D', 0	
+};
+
+static UINT8C StringSerial[STRING_SERIAL_SIZE] = 
+{
+	STRING_SERIAL_SIZE,
+	USB_DESCR_TYP_STRING,
+
+	/* serial */
+	'1', 0,
+	'7', 0,
+	'N', 0,
+	'o', 0,
+	'v', 0,
+	'2', 0,
+	'4', 0
+};
+
+const DescriptorData StringDescriptors[4] = 
+{
+	{ StringLangID, sizeof(StringLangID) },
+	{ StringVecdor, sizeof(StringVecdor) },
+	{ StringProduct, sizeof(StringProduct) },
+	{ StringSerial, sizeof(StringSerial) }
+};
+
 
 
 

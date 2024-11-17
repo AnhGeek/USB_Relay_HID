@@ -37,6 +37,8 @@ extern const DescriptorData DeviceQualifierCfg;
 /* custome HID report descriptor */
 extern const DescriptorData CustRepDesc;
 
+/* string descriptors */
+extern const DescriptorData StringDescriptors[4];
 
 
 
