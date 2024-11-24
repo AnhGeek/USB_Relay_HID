@@ -9,8 +9,10 @@ This project aim to create a circuit board, which can help you control an ouptut
 ## 📝 How to Use
 - **How to build**: you need to install [sdcc compiler](https://sourceforge.net/projects/sdcc/files/) and <a href="https://gnuwin32.sourceforge.net/packages/make.htm" target="_blank">Makefile</a>.
 - The relay is controlled via **ENDPOINT1**
-  + With the first byte of data, ENDPOINT1[0] = 0x02 => Relay will be closed
+  + With the first byte of data, ENDPOINT1[0] = 0x01 => Relay will be closed
+    ![on](image/on.png)
   + With the first byte of data, ENDPOINT1[0] = 0x01 => Relay will be openned again
+    ![off](image/off.png)
  
 ## 💻 MCU Used
 - CH551G: datasheet [Eng ver](https://akizukidenshi.com/goodsaffix/CH552.pdf)
