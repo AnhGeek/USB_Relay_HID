@@ -18,8 +18,8 @@ static UINT8C _DevDesc[] =
 	0x00,                 /*bDeviceSubClass*/
 	0x00,                 /*bDeviceProtocol*/
 	DEFAULT_ENDP0_SIZE,   /*bMaxPacketSize*/
-	0x3b, 0x41,           /*idVendor (0x413b)*/
-	0x07, 0x21,           /*idProduct = 0x2107*/
+	0xC0, 0x16,           /*idVendor (0x16c0)*/
+	0xDF, 0x05,           /*idProduct = 0x05DF*/
 	0x00, 0x01,           /*bcdDevice 2.00*/
 	0x01,                 /*Index of string descriptor describing
                                                   manufacturer */
@@ -151,8 +151,8 @@ const DescriptorData DeviceQualifierCfg =
 };
 
 #define STRING_LANGID_SIZE          4
-#define STRING_VENDOR_SIZE          16
-#define STRING_PRODUCT_SIZE         26
+#define STRING_VENDOR_SIZE          32
+#define STRING_PRODUCT_SIZE         20
 #define STRING_SERIAL_SIZE          16
 
 
@@ -168,14 +168,22 @@ static UINT8C StringVecdor[STRING_VENDOR_SIZE] =
 	STRING_VENDOR_SIZE,
 	USB_DESCR_TYP_STRING,
 
-	/* vendor */
-	'A', 0,
-	'N', 0,
-	'B', 0,
-	'T', 0,
-	'e', 0,
+	/* vendor www.dcttech.com*/
+	'w', 0,
+	'w', 0,
+	'w', 0,
+	'.', 0,
+	'd', 0,
     'c', 0,
-    'h', 0
+    't', 0,
+    't', 0,
+    'e', 0,
+    'c', 0,
+    'h', 0,
+    '.', 0,
+    'c', 0,
+    'o', 0,
+    'm', 0
 };
 
 static UINT8C StringProduct[STRING_PRODUCT_SIZE] = 
@@ -187,15 +195,12 @@ static UINT8C StringProduct[STRING_PRODUCT_SIZE] =
 	'U', 0,
 	'S', 0,
 	'B', 0,
-	' ', 0,
 	'R', 0,
 	'e', 0,
 	'l', 0,
 	'a', 0,
 	'y', 0,
-	'H', 0,
-    'I', 0,
-    'D', 0	
+	'1', 0	
 };
 
 static UINT8C StringSerial[STRING_SERIAL_SIZE] = 

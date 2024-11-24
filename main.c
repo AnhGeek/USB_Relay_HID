@@ -34,59 +34,6 @@ __xdata uint8_t u8Ep1Buff[64];
 __xdata uint8_t u8Ep2Buff[64];
 
 uint8_t u8UsbIndex;
-const uint8_t u8DeviceDescriptor[] = {
-	0x12,        // bLength
-	0x01,        // bDescriptorType (Device)
-	0x00, 0x02,  // bcdUSB 2.00
-	0x00,        // bDeviceClass (Use class information in the Interface Descriptors)
-	0x00,        // bDeviceSubClass 
-	0x00,        // bDeviceProtocol 
-	0x40,        // bMaxPacketSize0 64
-	0x4C, 0x05,  // idVendor 0x054C
-	0x68, 0x02,  // idProduct 0x0268
-	0x00, 0x01,  // bcdDevice 2.00
-	0x00,        // iManufacturer (String Index)
-	0x00,        // iProduct (String Index)
-	0x00,        // iSerialNumber (String Index)
-	0x01,        // bNumConfigurations 1
-};
-
-const uint8_t u8ConfigDescriptor[] = {
-	0x09,        // bLength
-	0x02,        // bDescriptorType (Configuration)
-	0x20, 0x00,  // wTotalLength 34
-	0x01,        // bNumInterfaces 1
-	0x01,        // bConfigurationValue
-	0x00,        // iConfiguration (String Index)
-	0x80,        // bmAttributes
-	0x32,        // bMaxPower 100mA
-	/* interface */
-	0x09,        // bLength
-	0x04,        // bDescriptorType (Interface)
-	0x00,        // bInterfaceNumber 0
-	0x00,        // bAlternateSetting
-	0x02,        // bNumEndpoints 2
-	0x03,        // bInterfaceClass
-	0x00,        // bInterfaceSubClass
-	0x00,        // bInterfaceProtocol
-	0x00,        // iInterface (String Index)
-	/* endpoint out */
-	0x07,
-	0x05,
-	0x01,
-	0x02,
-	0x40,
-	0x00,
-	0x01,
-	/* endpoint in */
-	0x07,
-	0x05,
-	0x82,
-	0x02,
-	0x40,
-	0x00,
-	0x01,
-};
 
 void send(uint8_t u8Data);
 
