@@ -21,6 +21,7 @@ This project aim to create a circuit board, which can help you control an ouptut
 ## 📄 Files
 - **Hardware_lite**: contains the PCB design in non-Isolator
 - **Hardware_with_relay_isolation**: contains the PCB design with Isolator
+     - Schematic: [link](https://github.com/AnhGeek/USB_Relay_HID/blob/main/Hardware_with_relay_isolation/Schematic_Usb-relay_2024-11-26.pdf)
 - **SimpleHIDWrite3**: an simple HID program to write directly and data to endpoint
 - **Makefile**: run this makefile via **"make all** to rebuild entirely project
 
